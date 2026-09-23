@@ -8,7 +8,7 @@ import ErrorBanner from "./components/ErrorBanner";
 
 function AppShell() {
   const { identity, roomId } = useIdentity();
-  const [authState, setAuthState] = useState("connecting"); // connecting | ready | error
+  const [authState, setAuthState] = useState("connecting"); 
   const [authError, setAuthError] = useState(null);
 
   const connect = () => {

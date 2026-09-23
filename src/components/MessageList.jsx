@@ -64,6 +64,8 @@ export default function MessageList({
             audioUrl={row.msg.audioUrl}
             durationSec={row.msg.durationSec}
             replyTo={row.msg.replyTo}
+            myId={myId}
+            theirName={themName}
             edited={row.msg.edited}
             deleted={row.msg.deleted}
             createdAt={row.msg.createdAt}

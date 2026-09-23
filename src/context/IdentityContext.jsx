@@ -1,6 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { USERS, IDENTITY_STORAGE_KEY, ROOM_STORAGE_KEY } from "../utils/constants";
-import { slugifyRoomCode } from "../utils/room";
+import {
+  USERS,
+  IDENTITY_STORAGE_KEY,
+  ROOM_STORAGE_KEY,
+  ROOM_PIN_STORAGE_KEY,
+} from "../utils/constants";
+import { buildRoomId } from "../utils/room";
 import { useProfileNames } from "../hooks/useProfileNames";
 
 const IdentityContext = createContext(null);
@@ -9,17 +14,20 @@ export function IdentityProvider({ children }) {
   const [roomCode, setRoomCodeState] = useState(
     () => localStorage.getItem(ROOM_STORAGE_KEY) || null
   );
+  const [roomPin, setRoomPinState] = useState(
+    () => localStorage.getItem(ROOM_PIN_STORAGE_KEY) || null
+  );
   const [identity, setIdentityState] = useState(() => {
     const stored = localStorage.getItem(IDENTITY_STORAGE_KEY);
     return stored && USERS[stored] ? stored : null;
   });
 
-  // The room code is what a couple shares between themselves; the
-  // slugified roomId is the actual Firestore path segment derived from
-  // it. Two different-looking codes that slugify the same way (e.g.
-  // "Hamara Pyaar" and "hamara-pyaar") land in the same room on
-  // purpose — the slug is the real key, the code is just how it's typed.
-  const roomId = roomCode ? slugifyRoomCode(roomCode) : null;
+  // The room's Firestore path is derived from BOTH the name and a
+  // secret PIN the couple shares — not the name alone. Two different
+  // couples could easily pick the same memorable name ("anshu"), but
+  // they won't also share the same private PIN, so they never end up
+  // in the same thread.
+  const roomId = roomCode && roomPin ? buildRoomId(roomCode, roomPin) : null;
 
   const { names: customNames, updateName } = useProfileNames(roomId);
 
@@ -28,20 +36,27 @@ export function IdentityProvider({ children }) {
   }, [roomCode]);
 
   useEffect(() => {
+    if (roomPin) localStorage.setItem(ROOM_PIN_STORAGE_KEY, roomPin);
+  }, [roomPin]);
+
+  useEffect(() => {
     if (identity) localStorage.setItem(IDENTITY_STORAGE_KEY, identity);
   }, [identity]);
 
-  const joinRoom = (code) => {
-    const slug = slugifyRoomCode(code);
-    if (!slug) return false;
+  const joinRoom = (code, pin) => {
+    const id = buildRoomId(code, pin);
+    if (!id) return false;
     setRoomCodeState(code.trim());
+    setRoomPinState(pin.trim());
     return true;
   };
 
   const leaveRoom = () => {
     localStorage.removeItem(ROOM_STORAGE_KEY);
+    localStorage.removeItem(ROOM_PIN_STORAGE_KEY);
     localStorage.removeItem(IDENTITY_STORAGE_KEY);
     setRoomCodeState(null);
+    setRoomPinState(null);
     setIdentityState(null);
   };
 
@@ -64,6 +79,7 @@ export function IdentityProvider({ children }) {
     <IdentityContext.Provider
       value={{
         roomCode,
+        roomPin,
         roomId,
         identity,
         me,

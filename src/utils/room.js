@@ -1,9 +1,6 @@
 /**
  * Turns whatever a person typed ("Hamara Pyaar!!", "  Rahul&Priya  ") into
- * a safe, consistent Firestore path segment. This is what actually
- * isolates one couple's room from every other couple using the same
- * deployment — two people only ever land in the same room if they type
- * the same code, which is exactly the point.
+ * a safe, consistent Firestore path segment.
  */
 export function slugifyRoomCode(raw) {
   return (raw || "")
@@ -12,6 +9,21 @@ export function slugifyRoomCode(raw) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 60);
+}
+
+/**
+ * The actual Firestore path is derived from BOTH the room name and a
+ * secret PIN, combined. This matters: a room *name* like "anshu" isn't
+ * secret — two totally different couples could easily type the same
+ * name. Folding in a PIN that only the two of them know means two
+ * different couples never land in the same thread even if they happen
+ * to pick the same name.
+ */
+export function buildRoomId(code, pin) {
+  const codeSlug = slugifyRoomCode(code);
+  const pinSlug = slugifyRoomCode(pin);
+  if (!codeSlug || !pinSlug) return null;
+  return `${codeSlug}--${pinSlug}`;
 }
 
 const WORDS = [
@@ -30,4 +42,9 @@ export function generateRoomCode() {
   const word = WORDS[Math.floor(Math.random() * WORDS.length)];
   const number = Math.floor(100 + Math.random() * 900);
   return `${word}-${number}`;
+}
+
+/** Suggests a fresh 4-digit PIN for a couple starting a new room. */
+export function generateRoomPin() {
+  return String(Math.floor(1000 + Math.random() * 9000));
 }

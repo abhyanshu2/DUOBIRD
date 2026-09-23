@@ -23,3 +23,4 @@ export const ACCESS_CODE = import.meta.env.VITE_ACCESS_CODE || "";
 
 export const IDENTITY_STORAGE_KEY = "duo-chat-identity";
 export const ROOM_STORAGE_KEY = "duo-chat-room";
+export const ROOM_PIN_STORAGE_KEY = "duo-chat-room-pin";

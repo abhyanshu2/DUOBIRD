@@ -25,22 +25,23 @@ function SeenTicks({ seen }) {
   );
 }
 
-function ReplyQuote({ replyTo, isMine, onJump }) {
+function ReplyQuote({ replyTo, isMine, myId, theirName, onJump }) {
   if (!replyTo) return null;
+  const label = replyTo.sender === myId ? "You" : theirName || "Them";
   return (
     <button
       onClick={(e) => {
         e.stopPropagation();
         onJump?.(replyTo.id);
       }}
-      className={`block w-full text-left mb-1.5 px-2.5 py-1.5 rounded-lg border-l-2 ${
+      className={`block w-full max-w-full min-w-0 text-left mb-1.5 px-2.5 py-1.5 rounded-lg border-l-2 overflow-hidden ${
         isMine
           ? "bg-white/10 border-white/40"
           : "bg-white/5 border-primary/60"
       }`}
     >
-      <p className={`text-[11px] font-medium ${isMine ? "text-white/80" : "text-primary"}`}>
-        {replyTo.sender}
+      <p className={`text-[11px] font-medium truncate ${isMine ? "text-white/80" : "text-primary"}`}>
+        {label}
       </p>
       <p className={`text-xs truncate ${isMine ? "text-white/70" : "text-muted"}`}>
         {replyTo.preview || "Message"}
@@ -56,6 +57,8 @@ export default function MessageBubble({
   audioUrl,
   durationSec,
   replyTo,
+  myId,
+  theirName,
   edited,
   deleted,
   createdAt,
@@ -89,7 +92,7 @@ export default function MessageBubble({
       )}
 
       <div
-        className={`flex flex-col max-w-[78%] sm:max-w-[65%] ${
+        className={`flex flex-col min-w-0 max-w-[78%] sm:max-w-[65%] ${
           isMine ? "items-end" : "items-start"
         }`}
       >
@@ -107,13 +110,21 @@ export default function MessageBubble({
         <div className="group relative">
           <div
             onClick={() => !deleted && setActionsOpen((v) => !v)}
-            className={`px-3.5 py-2.5 shadow-soft cursor-pointer ${
+            className={`px-3.5 py-2.5 shadow-soft cursor-pointer overflow-hidden ${
               isMine
                 ? "bg-gradient-to-br from-primary to-primaryDark text-white rounded-2xl rounded-tr-sm"
                 : "bg-card text-ink rounded-2xl rounded-tl-sm border border-white/5"
             } ${pending ? "opacity-60" : "opacity-100"}`}
           >
-            {!deleted && <ReplyQuote replyTo={replyTo} isMine={isMine} onJump={onJumpTo} />}
+            {!deleted && (
+              <ReplyQuote
+                replyTo={replyTo}
+                isMine={isMine}
+                myId={myId}
+                theirName={theirName}
+                onJump={onJumpTo}
+              />
+            )}
 
             {deleted ? (
               <p className={`text-[15px] italic ${isMine ? "text-white/70" : "text-muted"}`}>

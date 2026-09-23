@@ -9,7 +9,7 @@ import {
   HiSparkles,
 } from "react-icons/hi2";
 import { USERS, ACCESS_CODE } from "../utils/constants";
-import { generateRoomCode, slugifyRoomCode } from "../utils/room";
+import { generateRoomCode, generateRoomPin, buildRoomId } from "../utils/room";
 import { useIdentity } from "../context/IdentityContext";
 
 /**
@@ -40,21 +40,25 @@ export default function EntryGate() {
 
 function RoomStep({ onJoin }) {
   const [code, setCode] = useState("");
+  const [pin, setPin] = useState("");
   const [accessCode, setAccessCode] = useState("");
   const [touched, setTouched] = useState(false);
 
   const codeRequired = Boolean(ACCESS_CODE);
   const accessValid = !codeRequired || accessCode === ACCESS_CODE;
-  const slug = slugifyRoomCode(code);
-  const canContinue = Boolean(slug) && accessValid;
+  const roomId = buildRoomId(code, pin);
+  const canContinue = Boolean(roomId) && accessValid;
 
   const handleContinue = () => {
     setTouched(true);
     if (!canContinue) return;
-    onJoin(code);
+    onJoin(code, pin);
   };
 
-  const handleGenerate = () => setCode(generateRoomCode());
+  const handleGenerate = () => {
+    setCode(generateRoomCode());
+    setPin(generateRoomPin());
+  };
 
   return (
     <div className="app-min-height bg-background flex items-center justify-center px-6 pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]">
@@ -71,7 +75,7 @@ function RoomStep({ onJoin }) {
 
         <div className="bg-card rounded-chat p-5 shadow-soft border border-white/5">
           <label className="text-xs uppercase tracking-wider text-muted font-semibold">
-            Your room code
+            Room name
           </label>
           <input
             type="text"
@@ -82,8 +86,27 @@ function RoomStep({ onJoin }) {
             autoFocus
             className="mt-2 w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-ink placeholder:text-muted/70 outline-none focus:border-primary transition-colors"
           />
-          {touched && !slug && (
-            <p className="text-xs text-red-400 mt-1.5">Type a code first.</p>
+
+          <label className="text-xs uppercase tracking-wider text-muted font-semibold block mt-4">
+            Secret PIN
+          </label>
+          <input
+            type="text"
+            inputMode="numeric"
+            value={pin}
+            onChange={(e) => setPin(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleContinue()}
+            placeholder="e.g. 4821"
+            className="mt-2 w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-ink placeholder:text-muted/70 outline-none focus:border-primary transition-colors"
+          />
+          <p className="text-[11px] text-muted mt-1.5 leading-relaxed">
+            Only you and your partner should know this. The room name alone
+            isn't private — someone else could type the same name by
+            coincidence, but they won't also guess your PIN.
+          </p>
+
+          {touched && !roomId && (
+            <p className="text-xs text-red-400 mt-1.5">Fill in both fields.</p>
           )}
 
           <button
@@ -91,7 +114,7 @@ function RoomStep({ onJoin }) {
             className="mt-2 flex items-center gap-1.5 text-xs text-primary hover:brightness-125 transition-all"
           >
             <HiSparkles className="text-sm" />
-            Starting fresh? Generate a new code
+            Starting fresh? Generate both for us
           </button>
 
           {codeRequired && (
@@ -117,7 +140,7 @@ function RoomStep({ onJoin }) {
 
           <button
             onClick={handleContinue}
-            disabled={!slug}
+            disabled={!roomId}
             className="mt-5 w-full flex items-center justify-center gap-2 bg-primary disabled:bg-white/10 disabled:text-muted disabled:cursor-not-allowed text-white font-semibold rounded-xl py-3 transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
           >
             Continue
@@ -126,9 +149,9 @@ function RoomStep({ onJoin }) {
         </div>
 
         <p className="text-center text-xs text-muted mt-5">
-          Share this exact code with your partner — whoever types it lands
-          in the same private room as you. Anyone with a different code
-          gets a completely separate, private conversation.
+          Share both the room name and the PIN with your partner —
+          whoever types the exact same pair lands in the same private
+          room as you.
         </p>
       </div>
     </div>
