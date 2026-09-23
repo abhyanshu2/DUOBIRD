@@ -110,7 +110,7 @@ export default function MessageBubble({
         <div className="group relative">
           <div
             onClick={() => !deleted && setActionsOpen((v) => !v)}
-            className={`px-3.5 py-2.5 shadow-soft cursor-pointer overflow-hidden ${
+            className={`px-3 py-2 shadow-soft cursor-pointer overflow-hidden ${
               isMine
                 ? "bg-gradient-to-br from-primary to-primaryDark text-white rounded-2xl rounded-tr-sm"
                 : "bg-card text-ink rounded-2xl rounded-tl-sm border border-white/5"
@@ -135,6 +135,16 @@ export default function MessageBubble({
             ) : (
               <p className="text-[15px] leading-relaxed whitespace-pre-wrap break-words">
                 {text}
+                {"\u00A0\u00A0\u00A0\u00A0\u00A0"}
+                <span
+                  className={`float-right inline-flex items-center gap-1 mt-1 ml-1.5 text-[11px] leading-none whitespace-nowrap ${
+                    isMine ? "text-white/70" : "text-muted"
+                  }`}
+                >
+                  {edited && <span className="italic">edited</span>}
+                  {formatTime(createdAt)}
+                  {isMine && !pending && <SeenTicks seen={seen} />}
+                </span>
               </p>
             )}
           </div>
@@ -199,11 +209,13 @@ export default function MessageBubble({
         </div>
 
         <div className="flex items-center gap-1 mt-1 px-0.5">
-          {edited && !deleted && (
+          {edited && !deleted && (isVoice || deleted) && (
             <span className="text-[10px] text-muted italic">edited</span>
           )}
-          <span className="text-[11px] text-muted">{formatTime(createdAt)}</span>
-          {isMine && !pending && <SeenTicks seen={seen} />}
+          {(isVoice || deleted) && (
+            <span className="text-[11px] text-muted">{formatTime(createdAt)}</span>
+          )}
+          {(isVoice || deleted) && isMine && !pending && <SeenTicks seen={seen} />}
           {!actionsOpen && !deleted && (
             <button
               onClick={() => setActionsOpen(true)}
