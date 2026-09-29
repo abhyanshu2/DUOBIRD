@@ -21,7 +21,7 @@ export default function ChatHeader({
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between px-4 pb-3 bg-card/80 backdrop-blur-xl border-b border-white/5 [padding-top:max(0.75rem,env(safe-area-inset-top))]">
+    <header className="shrink-0 relative z-20 flex items-center justify-between px-4 pb-3 bg-card/80 backdrop-blur-xl border-b border-white/5 [padding-top:max(0.75rem,env(safe-area-inset-top))]">
       <div className="flex items-center gap-3 min-w-0">
         <div className="relative shrink-0">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primaryDark flex items-center justify-center text-white font-semibold">

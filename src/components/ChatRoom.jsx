@@ -13,8 +13,10 @@ import { useTyping } from "../hooks/useTyping";
 import { useCall } from "../hooks/useCall";
 import { usePinnedMessage } from "../hooks/usePinnedMessage";
 import { scrollToMessage } from "../utils/scrollToMessage";
+import { useViewportLock } from "../hooks/useViewportLock";
 
 export default function ChatRoom() {
+  useViewportLock();
   const { roomId, me, them, clearIdentity, leaveRoom } = useIdentity();
   const { messages, status, error, send, sendVoice, editMessage, deleteMessage, clearChat } =
     useMessages(roomId);
@@ -85,7 +87,7 @@ export default function ChatRoom() {
   };
 
   return (
-    <div className="app-height bg-background flex flex-col overflow-hidden">
+    <div className="chat-root bg-background flex flex-col overflow-hidden">
       <ChatHeader
         them={them}
         isOnline={theirOnline}

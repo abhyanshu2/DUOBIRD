@@ -25,25 +25,24 @@ function SeenTicks({ seen }) {
   );
 }
 
-function ReplyQuote({ replyTo, isMine, myId, theirName, onJump }) {
+function ReplyQuote({ replyTo, isMine, onJump }) {
   if (!replyTo) return null;
-  const label = replyTo.sender === myId ? "You" : theirName || "Them";
   return (
     <button
       onClick={(e) => {
         e.stopPropagation();
         onJump?.(replyTo.id);
       }}
-      className={`block w-full max-w-full min-w-0 text-left mb-1.5 px-2.5 py-1.5 rounded-lg border-l-2 overflow-hidden ${
+      className={`block w-full min-w-0 overflow-hidden text-left mb-1.5 px-2.5 py-1.5 rounded-lg border-l-2 ${
         isMine
           ? "bg-white/10 border-white/40"
           : "bg-white/5 border-primary/60"
       }`}
     >
-      <p className={`text-[11px] font-medium truncate ${isMine ? "text-white/80" : "text-primary"}`}>
-        {label}
+      <p className={`text-[10px] font-medium truncate ${isMine ? "text-white/80" : "text-primary"}`}>
+        {replyTo.sender}
       </p>
-      <p className={`text-xs truncate ${isMine ? "text-white/70" : "text-muted"}`}>
+      <p className={`text-[11px] truncate ${isMine ? "text-white/70" : "text-muted"}`}>
         {replyTo.preview || "Message"}
       </p>
     </button>
@@ -57,8 +56,6 @@ export default function MessageBubble({
   audioUrl,
   durationSec,
   replyTo,
-  myId,
-  theirName,
   edited,
   deleted,
   createdAt,
@@ -81,7 +78,7 @@ export default function MessageBubble({
   return (
     <div
       id={`msg-${id}`}
-      className={`flex w-full items-end gap-1.5 ${
+      className={`flex w-full min-w-0 items-end gap-1.5 ${
         isMine ? "justify-end" : "justify-start"
       } animate-fade-in-up scroll-mt-20`}
     >
@@ -107,44 +104,26 @@ export default function MessageBubble({
           </span>
         )}
 
-        <div className="group relative">
+        <div className="group relative min-w-0 max-w-full">
           <div
             onClick={() => !deleted && setActionsOpen((v) => !v)}
-            className={`px-3 py-2 shadow-soft cursor-pointer overflow-hidden ${
+            className={`px-3 py-2 shadow-soft cursor-pointer min-w-0 max-w-full overflow-hidden ${
               isMine
                 ? "bg-gradient-to-br from-primary to-primaryDark text-white rounded-2xl rounded-tr-sm"
                 : "bg-card text-ink rounded-2xl rounded-tl-sm border border-white/5"
             } ${pending ? "opacity-60" : "opacity-100"}`}
           >
-            {!deleted && (
-              <ReplyQuote
-                replyTo={replyTo}
-                isMine={isMine}
-                myId={myId}
-                theirName={theirName}
-                onJump={onJumpTo}
-              />
-            )}
+            {!deleted && <ReplyQuote replyTo={replyTo} isMine={isMine} onJump={onJumpTo} />}
 
             {deleted ? (
-              <p className={`text-[15px] italic ${isMine ? "text-white/70" : "text-muted"}`}>
+              <p className={`text-sm italic ${isMine ? "text-white/70" : "text-muted"}`}>
                 This message was deleted
               </p>
             ) : isVoice ? (
               <VoiceMessage audioUrl={audioUrl} durationSec={durationSec} isMine={isMine} />
             ) : (
-              <p className="text-[15px] leading-relaxed whitespace-pre-wrap break-words">
+              <p className="text-sm leading-relaxed whitespace-pre-wrap [overflow-wrap:anywhere]">
                 {text}
-                {"\u00A0\u00A0\u00A0\u00A0\u00A0"}
-                <span
-                  className={`float-right inline-flex items-center gap-1 mt-1 ml-1.5 text-[11px] leading-none whitespace-nowrap ${
-                    isMine ? "text-white/70" : "text-muted"
-                  }`}
-                >
-                  {edited && <span className="italic">edited</span>}
-                  {formatTime(createdAt)}
-                  {isMine && !pending && <SeenTicks seen={seen} />}
-                </span>
               </p>
             )}
           </div>
@@ -209,13 +188,11 @@ export default function MessageBubble({
         </div>
 
         <div className="flex items-center gap-1 mt-1 px-0.5">
-          {edited && !deleted && (isVoice || deleted) && (
+          {edited && !deleted && (
             <span className="text-[10px] text-muted italic">edited</span>
           )}
-          {(isVoice || deleted) && (
-            <span className="text-[11px] text-muted">{formatTime(createdAt)}</span>
-          )}
-          {(isVoice || deleted) && isMine && !pending && <SeenTicks seen={seen} />}
+          <span className="text-[10px] text-muted">{formatTime(createdAt)}</span>
+          {isMine && !pending && <SeenTicks seen={seen} />}
           {!actionsOpen && !deleted && (
             <button
               onClick={() => setActionsOpen(true)}

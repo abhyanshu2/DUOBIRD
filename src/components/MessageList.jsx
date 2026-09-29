@@ -50,7 +50,7 @@ export default function MessageList({
     <div
       ref={containerRef}
       onScroll={handleScroll}
-      className="flex-1 overflow-y-auto overscroll-contain px-3 sm:px-4 py-4 space-y-2 scroll-smooth"
+      className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden overscroll-contain px-3 sm:px-4 py-4 space-y-2 scroll-smooth"
     >
       {rows.map((row) =>
         row.type === "divider" ? (
@@ -64,8 +64,6 @@ export default function MessageList({
             audioUrl={row.msg.audioUrl}
             durationSec={row.msg.durationSec}
             replyTo={row.msg.replyTo}
-            myId={myId}
-            theirName={themName}
             edited={row.msg.edited}
             deleted={row.msg.deleted}
             createdAt={row.msg.createdAt}

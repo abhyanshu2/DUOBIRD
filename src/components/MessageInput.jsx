@@ -129,7 +129,7 @@ export default function MessageInput({
       : null;
 
   return (
-    <div className="sticky bottom-0 bg-background/95 backdrop-blur-xl border-t border-white/5 px-3 pt-3 [padding-bottom:max(0.75rem,env(safe-area-inset-bottom))]">
+    <div className="shrink-0 bg-background/95 backdrop-blur-xl border-t border-white/5 px-3 pt-3 [padding-bottom:max(0.75rem,env(safe-area-inset-bottom))]">
       {editingMessage && (
         <div className="mb-2 flex items-center gap-2 bg-card border border-primary/30 rounded-xl px-3 py-2">
           <HiPencilSquare className="text-primary text-sm shrink-0" />
