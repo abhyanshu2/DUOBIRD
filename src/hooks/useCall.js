@@ -29,6 +29,7 @@ const initialState = {
   error: null,
   muted: false,
   cameraOff: false,
+  facing: "user", // "user" = front camera, "environment" = back camera
   duration: 0,
 };
 
@@ -52,6 +53,8 @@ export function useCall(roomId, myId, theirId, theirName, theirAvatar) {
   const pendingRemoteCandidates = useRef([]);
   const durationTimer = useRef(null);
   const hasHandledOfferRef = useRef(false);
+  const facingRef = useRef("user");
+  const switchingRef = useRef(false);
 
   const patch = (partial) => setState((prev) => ({ ...prev, ...partial }));
 
@@ -128,6 +131,7 @@ export function useCall(roomId, myId, theirId, theirName, theirAvatar) {
       audio: true,
       video: mode === "video" ? { facingMode: "user", width: { ideal: 640 } } : false,
     });
+    facingRef.current = "user";
     localStreamRef.current = stream;
     setLocalStream(stream);
     stream.getTracks().forEach((track) => pc.addTrack(track, stream));
@@ -188,6 +192,7 @@ export function useCall(roomId, myId, theirId, theirName, theirAvatar) {
         error: null,
         duration: 0,
         cameraOff: false,
+        facing: "user",
       });
 
       try {
@@ -236,7 +241,7 @@ export function useCall(roomId, myId, theirId, theirName, theirAvatar) {
   const acceptCall = useCallback(
     async (offer, mode) => {
       try {
-        patch({ status: "active", role: "callee", mode, error: null, duration: 0, cameraOff: false });
+        patch({ status: "active", role: "callee", mode, error: null, duration: 0, cameraOff: false, facing: "user" });
 
         const pc = createPeerConnection(async (candidateJson) => {
           try {
@@ -307,6 +312,66 @@ export function useCall(roomId, myId, theirId, theirName, theirAvatar) {
     videoTracks.forEach((t) => (t.enabled = !nextOff));
     patch({ cameraOff: nextOff });
   }, [state.cameraOff]);
+
+  // Flip between the front and back camera without dropping the call:
+  // grab a new video track and swap it into the existing connection.
+  const switchCamera = useCallback(async () => {
+    const stream = localStreamRef.current;
+    const pc = pcRef.current;
+    if (!stream || !pc || switchingRef.current) return;
+    const oldTrack = stream.getVideoTracks()[0];
+    if (!oldTrack) return;
+
+    switchingRef.current = true;
+    const previousFacing = facingRef.current;
+    const nextFacing = previousFacing === "user" ? "environment" : "user";
+    const oldDeviceId = oldTrack.getSettings?.().deviceId;
+    const wasOff = !oldTrack.enabled;
+
+    const getVideoTrack = async (facing) => {
+      const s = await navigator.mediaDevices.getUserMedia({
+        audio: false,
+        video: { facingMode: { ideal: facing }, width: { ideal: 640 } },
+      });
+      return s.getVideoTracks()[0];
+    };
+
+    try {
+      // Many phones can't open a second camera while the first is running.
+      oldTrack.stop();
+
+      let newTrack;
+      let wanted = nextFacing;
+      try {
+        newTrack = await getVideoTrack(nextFacing);
+      } catch {
+        // Couldn't open the other camera — reopen the one we had.
+        wanted = previousFacing;
+        newTrack = await getVideoTrack(previousFacing);
+      }
+      newTrack.enabled = !wasOff;
+
+      const settings = newTrack.getSettings?.() || {};
+      let facing = wanted;
+      if (settings.facingMode) facing = settings.facingMode;
+      else if (oldDeviceId && settings.deviceId === oldDeviceId) facing = previousFacing;
+      facingRef.current = facing;
+
+      const sender = pc.getSenders().find((snd) => snd.track && snd.track.kind === "video");
+      if (sender) await sender.replaceTrack(newTrack);
+
+      stream.removeTrack(oldTrack);
+      stream.addTrack(newTrack);
+      const nextStream = new MediaStream(stream.getTracks());
+      localStreamRef.current = nextStream;
+      setLocalStream(nextStream);
+      patch({ facing });
+    } catch (err) {
+      console.error("Failed to switch camera:", err);
+    } finally {
+      switchingRef.current = false;
+    }
+  }, []);
 
   // Main signaling listener: watches the single call document for this
   // thread and reacts based on whether we're the caller or callee.
@@ -394,5 +459,6 @@ export function useCall(roomId, myId, theirId, theirName, theirAvatar) {
     hangUp,
     toggleMute,
     toggleCamera,
+    switchCamera,
   };
 }

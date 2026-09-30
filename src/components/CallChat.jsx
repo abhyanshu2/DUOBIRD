@@ -68,7 +68,7 @@ export default function CallChat({ messages, myId, onSend, showVideoStage }) {
       <button
         onClick={open ? () => setOpen(false) : openPanel}
         aria-label={open ? "Close chat" : "Open chat"}
-        className={`relative w-14 h-14 flex items-center justify-center rounded-full border border-white/10 transition-all active:scale-95 ${
+        className={`relative w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full border border-white/10 transition-all active:scale-95 ${
           open
             ? "bg-primary text-white"
             : showVideoStage
