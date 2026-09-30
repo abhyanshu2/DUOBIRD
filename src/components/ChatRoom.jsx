@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { HiClock } from "react-icons/hi2";
 import ChatHeader from "./ChatHeader";
 import MessageList from "./MessageList";
 import MessageInput from "./MessageInput";
@@ -8,6 +9,7 @@ import CallOverlay from "./CallOverlay";
 import PinnedBanner from "./PinnedBanner";
 import { useIdentity } from "../context/IdentityContext";
 import { useMessages } from "../hooks/useMessages";
+import { useChatSettings } from "../hooks/useChatSettings";
 import { usePresence } from "../hooks/usePresence";
 import { useTyping } from "../hooks/useTyping";
 import { useCall } from "../hooks/useCall";
@@ -18,12 +20,26 @@ import { useViewportLock } from "../hooks/useViewportLock";
 export default function ChatRoom() {
   useViewportLock();
   const { roomId, me, them, clearIdentity, leaveRoom } = useIdentity();
+  const { disappearing, setDisappearing } = useChatSettings(roomId, me.id);
   const { messages, status, error, send, sendVoice, editMessage, deleteMessage, clearChat } =
-    useMessages(roomId);
+    useMessages(roomId, disappearing);
   const { theirOnline, theirLastSeen } = usePresence(roomId, me.id, them.id);
   const { theirTyping, setTyping } = useTyping(roomId, me.id, them.id);
   const call = useCall(roomId, me.id, them.id, them.name, them.avatar);
   const { pinned, pinMessage, unpinMessage } = usePinnedMessage(roomId);
+
+  // A pinned disappearing message is un-pinned the moment it expires.
+  useEffect(() => {
+    const expiresAt = pinned?.expireAt?.toMillis?.();
+    if (!expiresAt) return undefined;
+    const wait = expiresAt - Date.now();
+    if (wait <= 0) {
+      unpinMessage();
+      return undefined;
+    }
+    const id = setTimeout(unpinMessage, Math.min(wait + 300, 2 ** 31 - 1));
+    return () => clearTimeout(id);
+  }, [pinned, unpinMessage]);
 
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [clearing, setClearing] = useState(false);
@@ -97,7 +113,20 @@ export default function ChatRoom() {
         onStartVideoCall={() => call.startCall("video")}
         callDisabled={call.status !== "idle" || status !== "ready"}
         onClearChat={() => setShowClearConfirm(true)}
+        disappearing={disappearing}
+        onToggleDisappearing={() =>
+          setDisappearing(!disappearing).catch((err) =>
+            console.error("Failed to change disappearing messages:", err)
+          )
+        }
       />
+
+      {disappearing && (
+        <div className="shrink-0 flex items-center justify-center gap-1.5 px-4 py-1.5 text-[11px] text-muted bg-primary/10 border-b border-white/5">
+          <HiClock className="text-xs text-primary" />
+          Disappearing messages are on: new messages are deleted after 24 hours
+        </div>
+      )}
 
       <PinnedBanner pinned={pinned} onJump={scrollToMessage} onUnpin={unpinMessage} />
 

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   HiCheck,
   HiEllipsisHorizontal,
@@ -9,6 +9,11 @@ import {
 } from "react-icons/hi2";
 import { formatTime } from "../utils/formatTime";
 import VoiceMessage from "./VoiceMessage";
+
+// Swipe-to-reply tuning (px): how far you must drag to trigger a reply,
+// and how far the message is allowed to travel.
+const SWIPE_TRIGGER = 56;
+const SWIPE_MAX = 72;
 
 function SeenTicks({ seen }) {
   return (
@@ -71,9 +76,67 @@ export default function MessageBubble({
   onJumpTo,
 }) {
   const [actionsOpen, setActionsOpen] = useState(false);
+  const [dragX, setDragX] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const dragRef = useRef(null);
+  const justSwipedRef = useRef(false);
   const isVoice = type === "voice" && audioUrl && !deleted;
 
   const close = () => setActionsOpen(false);
+
+  // Swipe a message to the right to reply to it (like WhatsApp).
+  const onPointerDown = (e) => {
+    if (deleted || e.pointerType === "mouse") return;
+    justSwipedRef.current = false;
+    dragRef.current = {
+      id: e.pointerId,
+      startX: e.clientX,
+      startY: e.clientY,
+      active: false,
+      fired: false,
+    };
+  };
+
+  const onPointerMove = (e) => {
+    const d = dragRef.current;
+    if (!d || d.id !== e.pointerId) return;
+    const dx = e.clientX - d.startX;
+    const dy = e.clientY - d.startY;
+
+    if (!d.active) {
+      // Mostly vertical, or to the left: that's scrolling, not a reply swipe.
+      if (Math.abs(dy) > 10 || dx < -10) {
+        dragRef.current = null;
+        return;
+      }
+      if (dx < 10 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+      d.active = true;
+      setDragging(true);
+      e.currentTarget.setPointerCapture?.(e.pointerId);
+    }
+
+    const x = Math.min(Math.max(dx, 0), SWIPE_MAX);
+    setDragX(x);
+    if (!d.fired && x >= SWIPE_TRIGGER) {
+      d.fired = true;
+      navigator.vibrate?.(15);
+    } else if (d.fired && x < SWIPE_TRIGGER) {
+      d.fired = false;
+    }
+  };
+
+  const endSwipe = (e, cancelled) => {
+    const d = dragRef.current;
+    if (!d || d.id !== e.pointerId) return;
+    dragRef.current = null;
+    if (!d.active) return;
+    justSwipedRef.current = true; // don't treat the release as a tap
+    setDragging(false);
+    setDragX(0);
+    if (d.fired && !cancelled) onReply?.();
+  };
+
+  const swipeProgress = Math.min(dragX / SWIPE_TRIGGER, 1);
 
   return (
     <div
@@ -89,10 +152,29 @@ export default function MessageBubble({
       )}
 
       <div
-        className={`flex flex-col min-w-0 max-w-[78%] sm:max-w-[65%] ${
+        className={`relative flex flex-col min-w-0 max-w-[78%] sm:max-w-[65%] ${
           isMine ? "items-end" : "items-start"
         }`}
+        // Only set a transform while swiping: a permanent one would break the
+        // full-screen click-catcher of the message menu.
+        style={{
+          transform: dragX ? `translateX(${dragX}px)` : undefined,
+          transition: dragging ? "none" : "transform 0.2s ease-out",
+        }}
       >
+        {dragX > 0 && (
+          <div
+            aria-hidden="true"
+            className="absolute right-full top-1/2 -mt-4 mr-2 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 text-primary pointer-events-none"
+            style={{
+              opacity: swipeProgress,
+              transform: `scale(${0.5 + 0.5 * swipeProgress})`,
+            }}
+          >
+            <HiArrowUturnLeft className="text-base" />
+          </div>
+        )}
+
         {isPinned && (
           <span
             className={`flex items-center gap-1 text-[10px] text-muted mb-1 ${
@@ -106,7 +188,18 @@ export default function MessageBubble({
 
         <div className="group relative min-w-0 max-w-full">
           <div
-            onClick={() => !deleted && setActionsOpen((v) => !v)}
+            onClick={() => {
+              if (justSwipedRef.current) {
+                justSwipedRef.current = false;
+                return;
+              }
+              if (!deleted) setActionsOpen((v) => !v);
+            }}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={(e) => endSwipe(e, false)}
+            onPointerCancel={(e) => endSwipe(e, true)}
+            style={{ touchAction: "pan-y" }}
             className={`px-3 py-2 shadow-soft cursor-pointer min-w-0 max-w-full overflow-hidden ${
               isMine
                 ? "bg-gradient-to-br from-primary to-primaryDark text-white rounded-2xl rounded-tr-sm"

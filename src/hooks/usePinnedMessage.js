@@ -42,6 +42,8 @@ export function usePinnedMessage(roomId) {
         type: msg.type,
         preview,
         pinnedAt: serverTimestamp(),
+        // If the message is a disappearing one, the pin goes away with it.
+        expireAt: msg.expireAt || null,
       });
     },
     [roomId]

@@ -5,6 +5,7 @@ import {
   HiVideoCamera,
   HiTrash,
   HiArrowRightStartOnRectangle,
+  HiClock,
 } from "react-icons/hi2";
 import { useState } from "react";
 
@@ -17,6 +18,8 @@ export default function ChatHeader({
   onStartVideoCall,
   callDisabled,
   onClearChat,
+  disappearing,
+  onToggleDisappearing,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -81,13 +84,30 @@ export default function ChatHeader({
                 className="fixed inset-0 z-10"
                 onClick={() => setMenuOpen(false)}
               />
-              <div className="absolute right-0 top-11 z-20 bg-card border border-white/10 rounded-xl shadow-soft overflow-hidden w-48 animate-pop-in">
+              <div className="absolute right-0 top-11 z-20 bg-card border border-white/10 rounded-xl shadow-soft overflow-hidden w-64 animate-pop-in">
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    onToggleDisappearing?.();
+                  }}
+                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-ink hover:bg-white/5 transition-colors"
+                >
+                  <HiClock className={disappearing ? "text-primary" : "text-muted"} />
+                  <span className="flex-1 text-left">Disappearing messages</span>
+                  <span
+                    className={`text-xs font-medium ${
+                      disappearing ? "text-primary" : "text-muted"
+                    }`}
+                  >
+                    {disappearing ? "24h · On" : "Off"}
+                  </span>
+                </button>
                 <button
                   onClick={() => {
                     setMenuOpen(false);
                     onSwitchUser();
                   }}
-                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-ink hover:bg-white/5 transition-colors"
+                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-ink hover:bg-white/5 transition-colors border-t border-white/5"
                 >
                   <HiArrowLeftOnRectangle className="text-muted" />
                   Switch identity
