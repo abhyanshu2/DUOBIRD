@@ -147,7 +147,17 @@ export default function ChatRoom() {
         onCancelEdit={() => setEditingMessage(null)}
       />
 
-      <CallOverlay call={call} />
+      <CallOverlay
+        call={call}
+        chat={{
+          messages,
+          myId: me.id,
+          onSend: (text) =>
+            send(text, me.id, null).catch((err) =>
+              console.error("Failed to send message:", err)
+            ),
+        }}
+      />
 
       {showClearConfirm && (
         <ConfirmDialog

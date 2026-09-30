@@ -7,6 +7,7 @@ import {
   HiVideoCamera,
   HiVideoCameraSlash,
 } from "react-icons/hi2";
+import CallChat from "./CallChat";
 
 function formatDuration(totalSeconds) {
   const m = Math.floor(totalSeconds / 60)
@@ -16,7 +17,7 @@ function formatDuration(totalSeconds) {
   return `${m}:${s}`;
 }
 
-export default function CallOverlay({ call }) {
+export default function CallOverlay({ call, chat }) {
   const audioRef = useRef(null);
   const remoteVideoRef = useRef(null);
   const localVideoRef = useRef(null);
@@ -54,8 +55,11 @@ export default function CallOverlay({ call }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-between bg-background/97 backdrop-blur-xl px-6 animate-fade-in-up overflow-hidden"
+      className="fixed left-0 right-0 z-50 flex flex-col items-center justify-between bg-background/97 backdrop-blur-xl px-6 animate-fade-in-up overflow-hidden"
       style={{
+        // Follow the visible area so the keyboard never hides the call chat.
+        top: "var(--app-top, 0px)",
+        height: "var(--app-h, 100dvh)",
         paddingTop: "max(3.5rem, env(safe-area-inset-top))",
         paddingBottom: "max(3.5rem, env(safe-area-inset-bottom))",
       }}
@@ -189,6 +193,15 @@ export default function CallOverlay({ call }) {
                   <HiVideoCamera className="text-xl" />
                 )}
               </button>
+            )}
+
+            {isActive && chat && (
+              <CallChat
+                messages={chat.messages}
+                myId={chat.myId}
+                onSend={chat.onSend}
+                showVideoStage={showVideoStage}
+              />
             )}
 
             <button
