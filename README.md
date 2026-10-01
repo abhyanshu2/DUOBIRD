@@ -1,4 +1,4 @@
-# 💬 Duo — A Private Chat App for Exactly Two People
+# 💬 DuoBird A Private Chat App for Exactly Two People
 
 > A premium, real-time, dark-themed chat app built for one private conversation between two people.
 > No signup, no user list, no group chats. Just the two of you.
