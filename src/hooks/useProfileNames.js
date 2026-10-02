@@ -61,3 +61,18 @@ export function useProfileNames(roomId) {
 
   return { names, updateName };
 }
+
+/**
+ * Saves a display name for one person in a room. Used by the entry screen,
+ * which lets people rename themselves in the same step as joining — before
+ * the room has been "joined" in the app, so it takes the roomId directly.
+ */
+export async function saveProfileName(roomId, userId, name) {
+  const trimmed = (name || "").trim().slice(0, 30);
+  if (!roomId || !trimmed) return;
+  await setDoc(
+    profileDocRef(roomId, userId),
+    { name: trimmed, updatedAt: serverTimestamp() },
+    { merge: true }
+  );
+}

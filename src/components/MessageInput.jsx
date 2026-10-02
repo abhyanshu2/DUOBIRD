@@ -129,7 +129,7 @@ export default function MessageInput({
       : null;
 
   return (
-    <div className="shrink-0 bg-background/95 backdrop-blur-xl border-t border-white/5 px-3 pt-3 [padding-bottom:max(0.75rem,env(safe-area-inset-bottom))]">
+    <div className="shrink-0 bg-card/95 backdrop-blur-xl border-t border-ink/10 px-3 pt-3 [padding-bottom:max(0.75rem,env(safe-area-inset-bottom))]">
       {editingMessage && (
         <div className="mb-2 flex items-center gap-2 bg-card border border-primary/30 rounded-xl px-3 py-2">
           <HiPencilSquare className="text-primary text-sm shrink-0" />
@@ -140,7 +140,7 @@ export default function MessageInput({
               resetBox();
             }}
             aria-label="Cancel edit"
-            className="w-6 h-6 shrink-0 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-white/10"
+            className="w-6 h-6 shrink-0 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-ink/10"
           >
             <HiXMark className="text-sm" />
           </button>
@@ -148,7 +148,7 @@ export default function MessageInput({
       )}
 
       {quote && (
-        <div className="mb-2 flex items-center gap-2 bg-card border border-white/10 rounded-xl px-3 py-2">
+        <div className="mb-2 flex items-center gap-2 bg-background border border-ink/10 rounded-xl px-3 py-2">
           <HiArrowUturnLeft className="text-primary text-sm shrink-0" />
           <div className="flex-1 min-w-0">
             <p className="text-[11px] text-primary font-medium">Replying</p>
@@ -157,7 +157,7 @@ export default function MessageInput({
           <button
             onClick={quote.onCancel}
             aria-label="Cancel reply"
-            className="w-6 h-6 shrink-0 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-white/10"
+            className="w-6 h-6 shrink-0 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-ink/10"
           >
             <HiXMark className="text-sm" />
           </button>
@@ -165,7 +165,7 @@ export default function MessageInput({
       )}
 
       {recorder.error && (
-        <p className="text-xs text-red-400 mb-2 px-1">{recorder.error}</p>
+        <p className="text-xs text-red-600 dark:text-red-400 mb-2 px-1">{recorder.error}</p>
       )}
 
       {recorder.recording ? (
@@ -173,12 +173,12 @@ export default function MessageInput({
           <button
             onClick={handleCancelRecording}
             aria-label="Cancel recording"
-            className="w-10 h-10 shrink-0 flex items-center justify-center rounded-full text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors"
+            className="w-10 h-10 shrink-0 flex items-center justify-center rounded-full text-muted hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10 transition-colors"
           >
             <HiTrash className="text-lg" />
           </button>
 
-          <div className="flex-1 flex items-center gap-2 bg-card rounded-chat border border-white/10 px-4 py-2.5">
+          <div className="flex-1 flex items-center gap-2 bg-background rounded-chat border border-ink/10 px-4 py-2.5">
             <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse-dot shrink-0" />
             <span className="text-sm text-ink tabular-nums">
               {formatDuration(recorder.elapsed)}
@@ -212,7 +212,7 @@ export default function MessageInput({
             )}
           </div>
 
-          <div className="flex-1 flex items-end bg-card rounded-chat border border-white/10 focus-within:border-primary/60 transition-colors px-4 py-2">
+          <div className="flex-1 flex items-end bg-background rounded-chat border border-ink/10 focus-within:border-primary/60 transition-colors px-4 py-2">
             <textarea
               ref={textareaRef}
               value={text}
@@ -230,7 +230,7 @@ export default function MessageInput({
             <button
               onClick={handleMicTap}
               disabled={disabled || sendingVoice}
-              className="w-11 h-11 shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-primary to-primaryDark text-white disabled:bg-white/10 disabled:bg-none disabled:text-muted transition-all duration-200 hover:brightness-110 active:scale-95 shadow-glow disabled:shadow-none"
+              className="w-11 h-11 shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-primary to-primaryDark text-white disabled:bg-ink/10 disabled:bg-none disabled:text-muted transition-all duration-200 hover:brightness-110 active:scale-95 shadow-glow disabled:shadow-none"
               aria-label="Record a voice note"
             >
               {sendingVoice ? (
@@ -243,7 +243,7 @@ export default function MessageInput({
             <button
               onClick={handleSend}
               disabled={disabled || !text.trim()}
-              className="w-11 h-11 shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-primary to-primaryDark text-white disabled:bg-white/10 disabled:bg-none disabled:text-muted transition-all duration-200 hover:brightness-110 active:scale-95 shadow-glow disabled:shadow-none"
+              className="w-11 h-11 shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-primary to-primaryDark text-white disabled:bg-ink/10 disabled:bg-none disabled:text-muted transition-all duration-200 hover:brightness-110 active:scale-95 shadow-glow disabled:shadow-none"
               aria-label={editingMessage ? "Save edit" : "Send message"}
             >
               <HiPaperAirplane className="text-lg -ml-0.5" />

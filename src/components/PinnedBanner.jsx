@@ -20,7 +20,7 @@ export default function PinnedBanner({ pinned, onJump, onUnpin }) {
         }}
         role="button"
         aria-label="Unpin"
-        className="w-7 h-7 shrink-0 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-white/10 transition-colors"
+        className="w-7 h-7 shrink-0 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-ink/10 transition-colors"
       >
         <HiXMark className="text-sm" />
       </span>

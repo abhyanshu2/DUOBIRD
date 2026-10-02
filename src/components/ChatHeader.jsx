@@ -24,7 +24,7 @@ export default function ChatHeader({
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="shrink-0 relative z-20 flex items-center justify-between px-4 pb-3 bg-card/80 backdrop-blur-xl border-b border-white/5 [padding-top:max(0.75rem,env(safe-area-inset-top))]">
+    <header className="shrink-0 relative z-20 flex items-center justify-between px-4 pb-3 bg-card/90 backdrop-blur-xl border-b border-ink/10 [padding-top:max(0.75rem,env(safe-area-inset-top))]">
       <div className="flex items-center gap-3 min-w-0">
         <div className="relative shrink-0">
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-primaryDark flex items-center justify-center text-white font-semibold">
@@ -72,7 +72,7 @@ export default function ChatHeader({
         <div className="relative">
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="w-9 h-9 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-white/5 transition-colors"
+            className="w-9 h-9 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-ink/5 transition-colors"
             aria-label="More options"
           >
             <HiEllipsisVertical className="text-xl" />
@@ -84,13 +84,13 @@ export default function ChatHeader({
                 className="fixed inset-0 z-10"
                 onClick={() => setMenuOpen(false)}
               />
-              <div className="absolute right-0 top-11 z-20 bg-card border border-white/10 rounded-xl shadow-soft overflow-hidden w-64 animate-pop-in">
+              <div className="absolute right-0 top-11 z-20 bg-card border border-ink/10 rounded-xl shadow-soft overflow-hidden w-64 animate-pop-in">
                 <button
                   onClick={() => {
                     setMenuOpen(false);
                     onToggleDisappearing?.();
                   }}
-                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-ink hover:bg-white/5 transition-colors"
+                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-ink hover:bg-ink/5 transition-colors"
                 >
                   <HiClock className={disappearing ? "text-primary" : "text-muted"} />
                   <span className="flex-1 text-left">Disappearing messages</span>
@@ -107,7 +107,7 @@ export default function ChatHeader({
                     setMenuOpen(false);
                     onSwitchUser();
                   }}
-                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-ink hover:bg-white/5 transition-colors border-t border-white/5"
+                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-ink hover:bg-ink/5 transition-colors border-t border-ink/10"
                 >
                   <HiArrowLeftOnRectangle className="text-muted" />
                   Switch identity
@@ -117,7 +117,7 @@ export default function ChatHeader({
                     setMenuOpen(false);
                     onClearChat();
                   }}
-                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-400 hover:bg-red-500/10 transition-colors border-t border-white/5"
+                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-colors border-t border-ink/10"
                 >
                   <HiTrash />
                   Clear chat
@@ -127,7 +127,7 @@ export default function ChatHeader({
                     setMenuOpen(false);
                     onLeaveRoom();
                   }}
-                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-muted hover:text-ink hover:bg-white/5 transition-colors border-t border-white/5"
+                  className="w-full flex items-center gap-2 px-4 py-3 text-sm text-muted hover:text-ink hover:bg-ink/5 transition-colors border-t border-ink/10"
                 >
                   <HiArrowRightStartOnRectangle />
                   Leave this room

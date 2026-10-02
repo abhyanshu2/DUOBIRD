@@ -122,9 +122,9 @@ export default function ChatRoom() {
       />
 
       {disappearing && (
-        <div className="shrink-0 flex items-center justify-center gap-1.5 px-4 py-1.5 text-[11px] text-muted bg-primary/10 border-b border-white/5">
-          <HiClock className="text-xs text-primary" />
-          Disappearing messages are on: new messages are deleted after 24 hours
+        <div className="shrink-0 flex items-center justify-center gap-1.5 px-4 py-1.5 text-[11px] text-muted bg-card border-b border-ink/10">
+          <HiClock className="text-xs" />
+          Disappearing messages · 24h
         </div>
       )}
 

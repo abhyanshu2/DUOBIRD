@@ -10,7 +10,7 @@ export default function ConfirmDialog({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-6 bg-black/50 backdrop-blur-sm animate-fade-in-up">
-      <div className="w-full max-w-sm bg-card border border-white/10 rounded-2xl shadow-soft p-5 animate-pop-in">
+      <div className="w-full max-w-sm bg-card border border-ink/10 rounded-2xl shadow-soft p-5 animate-pop-in">
         <h3 className="text-ink font-semibold text-lg">{title}</h3>
         {message && (
           <p className="mt-2 text-sm text-muted leading-relaxed">{message}</p>
@@ -20,7 +20,7 @@ export default function ConfirmDialog({
           <button
             onClick={onCancel}
             disabled={busy}
-            className="px-4 py-2 text-sm font-medium rounded-xl text-muted hover:text-ink hover:bg-white/5 transition-colors disabled:opacity-50"
+            className="px-4 py-2 text-sm font-medium rounded-xl text-muted hover:text-ink hover:bg-ink/5 transition-colors disabled:opacity-50"
           >
             {cancelLabel}
           </button>

@@ -182,7 +182,7 @@ export default function CallOverlay({ call, chat }) {
       };
 
   const roundBtn = (extra) =>
-    `w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full border border-white/10 transition-all active:scale-95 ${extra}`;
+    `w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full border border-ink/10 transition-all active:scale-95 ${extra}`;
 
   return (
     <div
@@ -235,7 +235,7 @@ export default function CallOverlay({ call, chat }) {
         <button
           onClick={minimize}
           aria-label="Minimize video"
-          className="absolute w-10 h-10 flex items-center justify-center rounded-full bg-black/40 text-white border border-white/10 active:scale-95 transition-all"
+          className="absolute w-10 h-10 flex items-center justify-center rounded-full bg-black/40 text-white border border-ink/10 active:scale-95 transition-all"
           style={{ top: "max(1rem, env(safe-area-inset-top))", left: "1rem" }}
         >
           <HiArrowsPointingIn className="text-lg" />
@@ -330,7 +330,9 @@ export default function CallOverlay({ call, chat }) {
                 aria-label={call.muted ? "Unmute microphone" : "Mute microphone"}
                 className={roundBtn(
                   call.muted
-                    ? "bg-white/10 text-ink"
+                    ? showVideoStage
+                      ? "bg-white/30 text-white"
+                      : "bg-ink/10 text-ink"
                     : showVideoStage
                     ? "bg-black/40 text-white"
                     : "bg-card text-muted hover:text-ink"
@@ -349,7 +351,7 @@ export default function CallOverlay({ call, chat }) {
                 onClick={call.toggleCamera}
                 aria-label={call.cameraOff ? "Turn camera on" : "Turn camera off"}
                 className={roundBtn(
-                  call.cameraOff ? "bg-white/10 text-ink" : "bg-black/40 text-white"
+                  call.cameraOff ? "bg-white/30 text-white" : "bg-black/40 text-white"
                 )}
               >
                 {call.cameraOff ? (

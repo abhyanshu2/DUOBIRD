@@ -41,7 +41,7 @@ function ReplyQuote({ replyTo, isMine, onJump }) {
       className={`block w-full min-w-0 overflow-hidden text-left mb-1.5 px-2.5 py-1.5 rounded-lg border-l-2 ${
         isMine
           ? "bg-white/10 border-white/40"
-          : "bg-white/5 border-primary/60"
+          : "bg-ink/5 border-primary/60"
       }`}
     >
       <p className={`text-[10px] font-medium truncate ${isMine ? "text-white/80" : "text-primary"}`}>
@@ -146,7 +146,7 @@ export default function MessageBubble({
       } animate-fade-in-up scroll-mt-20`}
     >
       {!isMine && (
-        <div className="w-6 h-6 rounded-full bg-white/10 text-muted text-[10px] font-semibold flex items-center justify-center shrink-0 mb-0.5">
+        <div className="w-6 h-6 rounded-full bg-ink/10 text-muted text-[10px] font-semibold flex items-center justify-center shrink-0 mb-0.5">
           {avatar}
         </div>
       )}
@@ -165,7 +165,7 @@ export default function MessageBubble({
         {dragX > 0 && (
           <div
             aria-hidden="true"
-            className="absolute right-full top-1/2 -mt-4 mr-2 w-8 h-8 flex items-center justify-center rounded-full bg-white/10 text-primary pointer-events-none"
+            className="absolute right-full top-1/2 -mt-4 mr-2 w-8 h-8 flex items-center justify-center rounded-full bg-ink/10 text-primary pointer-events-none"
             style={{
               opacity: swipeProgress,
               transform: `scale(${0.5 + 0.5 * swipeProgress})`,
@@ -203,7 +203,7 @@ export default function MessageBubble({
             className={`px-3 py-2 shadow-soft cursor-pointer min-w-0 max-w-full overflow-hidden ${
               isMine
                 ? "bg-gradient-to-br from-primary to-primaryDark text-white rounded-2xl rounded-tr-sm"
-                : "bg-card text-ink rounded-2xl rounded-tl-sm border border-white/5"
+                : "bg-bubble text-ink rounded-2xl rounded-tl-sm"
             } ${pending ? "opacity-60" : "opacity-100"}`}
           >
             {!deleted && <ReplyQuote replyTo={replyTo} isMine={isMine} onJump={onJumpTo} />}
@@ -225,7 +225,7 @@ export default function MessageBubble({
             <>
               <div className="fixed inset-0 z-10" onClick={close} />
               <div
-                className={`absolute z-20 top-full mt-1 flex items-center gap-0.5 bg-card border border-white/10 rounded-full shadow-soft px-1 py-1 animate-pop-in ${
+                className={`absolute z-20 top-full mt-1 flex items-center gap-0.5 bg-card border border-ink/10 rounded-full shadow-soft px-1 py-1 animate-pop-in ${
                   isMine ? "right-0" : "left-0"
                 }`}
               >
@@ -235,7 +235,7 @@ export default function MessageBubble({
                     close();
                   }}
                   aria-label="Reply"
-                  className="w-8 h-8 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-white/10"
+                  className="w-8 h-8 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-ink/10"
                 >
                   <HiArrowUturnLeft className="text-sm" />
                 </button>
@@ -246,7 +246,7 @@ export default function MessageBubble({
                       close();
                     }}
                     aria-label="Edit"
-                    className="w-8 h-8 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-white/10"
+                    className="w-8 h-8 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-ink/10"
                   >
                     <HiPencilSquare className="text-sm" />
                   </button>
@@ -257,7 +257,7 @@ export default function MessageBubble({
                     close();
                   }}
                   aria-label={isPinned ? "Unpin" : "Pin"}
-                  className={`w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 ${
+                  className={`w-8 h-8 flex items-center justify-center rounded-full hover:bg-ink/10 ${
                     isPinned ? "text-primary" : "text-muted hover:text-ink"
                   }`}
                 >
@@ -270,7 +270,7 @@ export default function MessageBubble({
                       close();
                     }}
                     aria-label="Delete"
-                    className="w-8 h-8 flex items-center justify-center rounded-full text-muted hover:text-red-400 hover:bg-red-500/10"
+                    className="w-8 h-8 flex items-center justify-center rounded-full text-muted hover:text-red-600 dark:hover:text-red-400 hover:bg-red-500/10"
                   >
                     <HiTrash className="text-sm" />
                   </button>

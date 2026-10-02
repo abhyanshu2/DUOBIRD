@@ -68,7 +68,7 @@ export default function CallChat({ messages, myId, onSend, showVideoStage }) {
       <button
         onClick={open ? () => setOpen(false) : openPanel}
         aria-label={open ? "Close chat" : "Open chat"}
-        className={`relative w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full border border-white/10 transition-all active:scale-95 ${
+        className={`relative w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-full border border-ink/10 transition-all active:scale-95 ${
           open
             ? "bg-primary text-white"
             : showVideoStage
@@ -87,7 +87,7 @@ export default function CallChat({ messages, myId, onSend, showVideoStage }) {
       {toast && !open && (
         <button
           onClick={openPanel}
-          className="absolute left-4 right-4 z-20 mx-auto max-w-sm text-left bg-card/95 backdrop-blur-xl border border-white/10 rounded-2xl shadow-soft px-3.5 py-2.5 animate-fade-in-up"
+          className="absolute left-4 right-4 z-20 mx-auto max-w-sm text-left bg-card/95 backdrop-blur-xl border border-ink/10 rounded-2xl shadow-soft px-3.5 py-2.5 animate-fade-in-up"
           style={{ bottom: "calc(max(3.5rem, env(safe-area-inset-bottom)) + 5.5rem)" }}
         >
           <p className="text-[13px] text-ink truncate">{toast.text}</p>
@@ -95,13 +95,13 @@ export default function CallChat({ messages, myId, onSend, showVideoStage }) {
       )}
 
       {open && (
-        <div className="absolute inset-x-0 bottom-0 z-30 max-h-[70%] flex flex-col bg-card/95 backdrop-blur-xl border-t border-white/10 rounded-t-3xl shadow-soft animate-fade-in-up">
+        <div className="absolute inset-x-0 bottom-0 z-30 max-h-[70%] flex flex-col bg-card/95 backdrop-blur-xl border-t border-ink/10 rounded-t-3xl shadow-soft animate-fade-in-up">
           <div className="flex items-center justify-between px-4 pt-3 pb-2 shrink-0">
             <span className="text-sm font-semibold text-ink">Chat</span>
             <button
               onClick={() => setOpen(false)}
               aria-label="Close chat"
-              className="w-8 h-8 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-white/10"
+              className="w-8 h-8 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-ink/10"
             >
               <HiXMark className="text-lg" />
             </button>
@@ -122,7 +122,7 @@ export default function CallChat({ messages, myId, onSend, showVideoStage }) {
                     className={`max-w-[80%] min-w-0 px-3 py-1.5 rounded-2xl text-[13px] leading-snug whitespace-pre-wrap [overflow-wrap:anywhere] ${
                       mine
                         ? "bg-gradient-to-br from-primary to-primaryDark text-white rounded-tr-sm"
-                        : "bg-white/10 text-ink rounded-tl-sm"
+                        : "bg-bubble text-ink rounded-tl-sm"
                     } ${m.deleted || m.type === "voice" ? "italic opacity-80" : ""}`}
                   >
                     {previewText(m)}
@@ -133,7 +133,7 @@ export default function CallChat({ messages, myId, onSend, showVideoStage }) {
           </div>
 
           <div
-            className="flex items-center gap-2 px-3 pt-2 shrink-0 border-t border-white/5"
+            className="flex items-center gap-2 px-3 pt-2 shrink-0 border-t border-ink/10"
             style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
           >
             <input
@@ -143,13 +143,13 @@ export default function CallChat({ messages, myId, onSend, showVideoStage }) {
               onChange={(e) => setText(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && submit()}
               placeholder="Type a message"
-              className="flex-1 min-w-0 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-ink placeholder:text-muted outline-none focus:border-primary/60 transition-colors"
+              className="flex-1 min-w-0 bg-ink/5 border border-ink/10 rounded-full px-4 py-2 text-ink placeholder:text-muted outline-none focus:border-primary/60 transition-colors"
             />
             <button
               onClick={submit}
               disabled={!text.trim()}
               aria-label="Send message"
-              className="w-10 h-10 shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-primary to-primaryDark text-white disabled:bg-white/10 disabled:bg-none disabled:text-muted transition-all active:scale-95"
+              className="w-10 h-10 shrink-0 flex items-center justify-center rounded-full bg-gradient-to-br from-primary to-primaryDark text-white disabled:bg-ink/10 disabled:bg-none disabled:text-muted transition-all active:scale-95"
             >
               <HiPaperAirplane className="text-base -ml-0.5" />
             </button>

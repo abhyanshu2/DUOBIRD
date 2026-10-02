@@ -3,6 +3,36 @@
 @tailwind utilities;
 
 @layer base {
+  /* Light = Mint, Dark = Mint night. Colours are "R G B" triplets so Tailwind
+     can still apply opacity (bg-ink/10 etc). */
+  :root {
+    --c-background: 246 251 249;
+    --c-card: 255 255 255;
+    --c-bubble: 230 242 237;
+    --c-primary: 10 138 106;
+    --c-primary-dark: 8 114 86;
+    --c-accent: 22 163 74;
+    --c-ink: 16 49 42;
+    --c-muted: 88 116 105;
+    --shadow-soft: 0 6px 20px rgba(16, 49, 42, 0.08);
+    color-scheme: light;
+  }
+
+  [data-theme="dark"] {
+    /* Graphite: soft neutral grey (not near-black) with calm mint accents.
+       Easy on the eyes at night, no glare. */
+    --c-background: 27 29 30;
+    --c-card: 37 40 41;
+    --c-bubble: 47 51 52;
+    --c-primary: 15 151 116;
+    --c-primary-dark: 11 118 90;
+    --c-accent: 38 176 112;
+    --c-ink: 236 239 238;
+    --c-muted: 160 168 165;
+    --shadow-soft: 0 6px 22px rgba(0, 0, 0, 0.45);
+    color-scheme: dark;
+  }
+
   html,
   body,
   #root {
@@ -10,13 +40,14 @@
   }
 
   html {
+    background-color: rgb(var(--c-background));
     /* Stops Chrome/Firefox on Android from bumping text size on rotate,
        which otherwise breaks the fixed 15px/13px bubble/label sizing. */
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
   }
 
-  body {
+  body{
     @apply bg-background text-ink antialiased;
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
       sans-serif;
@@ -27,7 +58,7 @@
   }
 
   ::selection {
-    @apply bg-primary/40 text-white;
+    @apply bg-primary/25 text-ink;
   }
 
   button {
@@ -75,7 +106,7 @@
     background: transparent;
   }
   .overflow-y-auto::-webkit-scrollbar-thumb {
-    background-color: rgba(148, 163, 184, 0.25);
+    background-color: rgb(var(--c-ink) / 0.2);
     border-radius: 999px;
   }
 }

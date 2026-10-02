@@ -1,23 +1,27 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: ["selector", '[data-theme="dark"]'],
   content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
     extend: {
       colors: {
-        background: "#0F0B1A",
-        card: "#1E1830",
-        primary: "#8B5CF6",
-        primaryDark: "#6D28D9",
-        accent: "#22C55E",
-        ink: "#FFFFFF",
-        muted: "#9E96B5",
+        // Every colour is a CSS variable (see src/index.css) so the light and
+        // dark themes can swap them. `<alpha-value>` keeps ink/10, primary/60...
+        background: "rgb(var(--c-background) / <alpha-value>)",
+        card: "rgb(var(--c-card) / <alpha-value>)",
+        bubble: "rgb(var(--c-bubble) / <alpha-value>)", // the other person's bubble
+        primary: "rgb(var(--c-primary) / <alpha-value>)",
+        primaryDark: "rgb(var(--c-primary-dark) / <alpha-value>)",
+        accent: "rgb(var(--c-accent) / <alpha-value>)", // online dot, unread badge, answer-call
+        ink: "rgb(var(--c-ink) / <alpha-value>)", // main text (also ink/5, ink/10 soft lines)
+        muted: "rgb(var(--c-muted) / <alpha-value>)",
       },
       borderRadius: {
         chat: "20px",
       },
       boxShadow: {
-        soft: "0 8px 30px rgba(0, 0, 0, 0.3)",
-        glow: "0 0 0 1px rgba(139, 92, 246, 0.18), 0 8px 24px rgba(139, 92, 246, 0.18)",
+        soft: "var(--shadow-soft)",
+        glow: "0 0 0 1px rgba(10, 138, 106, 0.18), 0 8px 24px rgba(10, 138, 106, 0.2)",
       },
       keyframes: {
         "fade-in-up": {
