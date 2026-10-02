@@ -830,8 +830,6 @@ The app was designed mobile-first, then adapted for desktop. Key fixes:
 - 😍 Message reactions
 - 🔒 End-to-end encryption
 - 🔍 Chat search
-- 🌗 Light / dark theme toggle
-- 📌 Multiple pins
 - 🗑️ "Delete for me" vs "Delete for everyone"
 - 🔐 Real login (email link / Google) for stronger security
 
