@@ -126,7 +126,7 @@ export default function EntryGate() {
           </div>
           <h1 className="text-2xl font-bold text-ink">DuoBird</h1>
           <p className="text-muted text-sm mt-1">
-            A private space for just the two of you.
+            A private space for just the two of you
           </p>
         </div>
 
@@ -164,7 +164,7 @@ export default function EntryGate() {
             className="mt-2 flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
           >
             <HiSparkles className="text-sm" />
-            Starting fresh? Generate both for us
+            Starting fresh ? Generate both for us
           </button>
 
           {codeRequired && (
