@@ -124,9 +124,9 @@ export default function EntryGate() {
           <div className="mx-auto w-14 h-14 rounded-[18px] bg-primary text-white flex items-center justify-center mb-3">
             <HiHeart className="text-2xl" />
           </div>
-          <h1 className="text-2xl font-bold text-ink">DuoBird</h1>
+          <h1 className="text-2xl font-bold text-ink">Our room</h1>
           <p className="text-muted text-sm mt-1">
-            A private space for just the two of you
+            A private space for just the two of you.
           </p>
         </div>
 
@@ -138,7 +138,7 @@ export default function EntryGate() {
             value={code}
             onChange={(e) => setCode(e.target.value)}
             onKeyDown={onEnterKey}
-            placeholder="Eg = hamarapyaar"
+            placeholder="e.g. hamara-pyaar"
             autoFocus
             className={INPUT_CLASS}
           />
@@ -152,11 +152,13 @@ export default function EntryGate() {
             value={pin}
             onChange={(e) => setPin(e.target.value)}
             onKeyDown={onEnterKey}
-            placeholder="Eg = 4821"
+            placeholder="e.g. 4821"
             className={INPUT_CLASS}
           />
           <p className="text-[11px] text-muted mt-1.5 leading-relaxed">
-           
+            Only you and your partner should know this. The room name alone
+            isn't private, someone else could type the same name by
+            coincidence, but they won't also guess your PIN.
           </p>
 
           <button
@@ -164,7 +166,7 @@ export default function EntryGate() {
             className="mt-2 flex items-center gap-1.5 text-xs font-medium text-primary hover:underline"
           >
             <HiSparkles className="text-sm" />
-            Starting fresh ? Generate both for us
+            Starting fresh? Generate both for us
           </button>
 
           {codeRequired && (
@@ -226,7 +228,7 @@ export default function EntryGate() {
 
                 {isEditing ? (
                   <div
-                    className="flex items-center gap-1 w-full"
+                    className="flex flex-col items-center gap-2 w-full"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <input
@@ -240,22 +242,24 @@ export default function EntryGate() {
                       }}
                       maxLength={30}
                       placeholder="Your name"
-                      className="min-w-0 flex-1 bg-ink/10 border border-primary/50 rounded-lg px-2 py-1 text-sm text-ink outline-none"
+                      className="w-full min-w-0 bg-ink/10 border border-primary/50 rounded-lg px-2.5 py-1.5 text-base text-ink text-center outline-none"
                     />
-                    <button
-                      onClick={(e) => commitEditing(e, user.id)}
-                      aria-label="Save name"
-                      className="w-6 h-6 shrink-0 flex items-center justify-center rounded-full bg-accent text-white"
-                    >
-                      <HiCheck className="text-xs" />
-                    </button>
-                    <button
-                      onClick={cancelEditing}
-                      aria-label="Cancel"
-                      className="w-6 h-6 shrink-0 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-ink/10"
-                    >
-                      <HiXMark className="text-xs" />
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={(e) => commitEditing(e, user.id)}
+                        aria-label="Save name"
+                        className="w-8 h-8 shrink-0 flex items-center justify-center rounded-full bg-accent text-white"
+                      >
+                        <HiCheck className="text-sm" />
+                      </button>
+                      <button
+                        onClick={cancelEditing}
+                        aria-label="Cancel"
+                        className="w-8 h-8 shrink-0 flex items-center justify-center rounded-full text-muted hover:text-ink hover:bg-ink/10"
+                      >
+                        <HiXMark className="text-sm" />
+                      </button>
+                    </div>
                   </div>
                 ) : (
                   <span
@@ -295,7 +299,9 @@ export default function EntryGate() {
           Only people with this room name and PIN can join
         </p>
         <p className="text-center text-xs text-muted mt-2 leading-relaxed">
-         
+          Share the room name and PIN with your partner. This device will
+          remember you, so there's no signup ever. Tap the pencil on a tile
+          any time to change a name.
         </p>
       </div>
     </div>
