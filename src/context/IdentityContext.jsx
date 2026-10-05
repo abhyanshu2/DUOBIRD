@@ -22,11 +22,7 @@ export function IdentityProvider({ children }) {
     return stored && USERS[stored] ? stored : null;
   });
 
-  // The room's Firestore path is derived from BOTH the name and a
-  // secret PIN the couple shares — not the name alone. Two different
-  // couples could easily pick the same memorable name ("anshu"), but
-  // they won't also share the same private PIN, so they never end up
-  // in the same thread.
+  
   const roomId = roomCode && roomPin ? buildRoomId(roomCode, roomPin) : null;
 
   const { names: customNames, updateName } = useProfileNames(roomId);
