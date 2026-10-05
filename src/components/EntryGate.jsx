@@ -156,9 +156,6 @@ export default function EntryGate() {
             className={INPUT_CLASS}
           />
           <p className="text-[11px] text-muted mt-1.5 leading-relaxed">
-            Only you and your partner should know this. The room name alone
-            isn't private, someone else could type the same name by
-            coincidence, but they won't also guess your PIN.
           </p>
 
           <button
@@ -299,9 +296,7 @@ export default function EntryGate() {
           Only people with this room name and PIN can join
         </p>
         <p className="text-center text-xs text-muted mt-2 leading-relaxed">
-          Share the room name and PIN with your partner. This device will
-          remember you, so there's no signup ever. Tap the pencil on a tile
-          any time to change a name.
+          
         </p>
       </div>
     </div>
