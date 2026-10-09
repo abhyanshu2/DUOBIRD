@@ -1,7 +1,6 @@
 import { HiMoon, HiSun } from "react-icons/hi2";
 import { useTheme } from "../hooks/useTheme";
 
-/** Round sun/moon button that flips between the light and dark theme. */
 export default function ThemeToggle({ className = "" }) {
   const { isDark, toggleTheme } = useTheme();
   const label = isDark ? "Switch to light theme" : "Switch to dark theme";
